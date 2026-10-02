@@ -1,0 +1,381 @@
+{
+  "contexts": [
+    {
+      "id": "bam",
+      "title": "Bridge Alert Management",
+      "short": "BAM / navigation bridge",
+      "summary": "Manufacturer-defined (unlisted) alerts under IEC 62923-2 with identifiers 10000–9999999.",
+      "symptoms": [
+        {
+          "id": "bam-unknown-id",
+          "title": "Alert ID in 10000–9999999 range",
+          "detail": "CAM or ECDIS shows an alert whose identifier is outside the Annex A standard list."
+        },
+        {
+          "id": "bam-no-text",
+          "title": "Alert presents with poor or missing text",
+          "detail": "Priority/category shows, but the human-readable description is blank, generic, or untranslated."
+        },
+        {
+          "id": "bam-repeat",
+          "title": "Repeated unlisted alert from one equipment",
+          "detail": "Same manufacturer ID reappears after acknowledge/silence from radar, INS, AIS, or other BAM source."
+        },
+        {
+          "id": "bam-transfer",
+          "title": "Responsibility transfer fails for the alert",
+          "detail": "Alert cannot be transferred or remains orphaned on CAM after source equipment reset."
+        }
+      ]
+    },
+    {
+      "id": "ams",
+      "title": "Engine-room AMS / UMS",
+      "short": "Machinery AMS",
+      "summary": "Alarm points that appear on the AMS/HMI but are missing from the ship’s approved alarm list, IOM, or set-point schedule.",
+      "symptoms": [
+        {
+          "id": "ams-not-on-list",
+          "title": "Active alarm not on approved alarm list",
+          "detail": "Tag/point number shows on the AMS but has no matching entry in the class-approved alarm list."
+        },
+        {
+          "id": "ams-orphan-tag",
+          "title": "Unknown tag or channel after retrofit",
+          "detail": "New or renamed I/O after yard work, upgrade, or spare-channel enablement."
+        },
+        {
+          "id": "ams-false-cluster",
+          "title": "Group of unexplained alarms in one zone",
+          "detail": "Several undocumented or unexpected alarms from the same cabinet, loop, or 24 V branch."
+        },
+        {
+          "id": "ams-extension-only",
+          "title": "Heard on extension but unclear on panel",
+          "detail": "Duty cabin / bridge extension annunciates, but panel text is blank, truncated, or generic."
+        }
+      ]
+    }
+  ],
+  "steps": {
+    "bam-unknown-id": [
+      {
+        "title": "Capture the alert identity",
+        "actions": [
+          "Record alert identifier, priority, category, source equipment, time, and CAM state (active / acknowledged / silenced).",
+          "Photograph or export the ALF / alert log entry if available.",
+          "Note own-ship operating mode (harbour, sea, autopilot, INS modes)."
+        ],
+        "checks": [
+          "Identifier is numeric and in 10000–9999999 (manufacturer-defined / unlisted).",
+          "Source equipment name matches the physical unit raising the condition."
+        ]
+      },
+      {
+        "title": "Match against manufacturer documentation",
+        "actions": [
+          "Open the source equipment alert list (maker’s BAM / alert identifier list required by IEC 62923-2).",
+          "Search by identifier first, then by displayed text.",
+          "Confirm the assigned meaning, recommended bridge response, and whether the alert is safety-related."
+        ],
+        "checks": [
+          "Maker list includes this ID.",
+          "Documented meaning matches the observed operating condition."
+        ],
+        "ifMissing": "Treat as incomplete manufacturer documentation. Escalate to maker/service and keep the alert active in the investigation log—do not ignore it because it is unlisted."
+      },
+      {
+        "title": "Verify the physical condition",
+        "actions": [
+          "Inspect the reported function on the source equipment (sensor feed, COM loss, power, antenna, heading source, etc.).",
+          "Compare with redundant sensors / backup equipment where fitted.",
+          "Check recent configuration changes, software updates, and interface cabling."
+        ],
+        "checks": [
+          "A real equipment or interface fault explains the alert.",
+          "No concurrent earth fault or power anomaly on navigation equipment supplies."
+        ]
+      },
+      {
+        "title": "Contain and document",
+        "actions": [
+          "Apply the maker’s recommended bridge procedure; use backup navigation methods if the function is impaired.",
+          "Log the ID, meaning, root cause, and corrective action in the bridge alert / defect book.",
+          "Update the vessel’s local BAM quick-reference with this unlisted ID so the next watch recognises it."
+        ],
+        "checks": [
+          "Alert clears only after the cause is fixed—not by silencing alone.",
+          "Local quick-reference and defect report are updated."
+        ]
+      }
+    ],
+    "bam-no-text": [
+      {
+        "title": "Preserve evidence before reset",
+        "actions": [
+          "Record identifier, source, priority, and any partial text.",
+          "Export CAM / equipment logs if the HMI allows.",
+          "Do not power-cycle the source solely to clear an unread message until evidence is captured."
+        ],
+        "checks": [
+          "Identifier alone is enough to look up the maker list."
+        ]
+      },
+      {
+        "title": "Resolve text from the maker list",
+        "actions": [
+          "Look up the identifier in the equipment’s BAM alert catalogue.",
+          "Check language pack / HMI text database integrity if other alerts also lack text.",
+          "Compare software version with the version tied to the alert catalogue on board."
+        ],
+        "checks": [
+          "Catalogue entry exists for the ID.",
+          "HMI language and software version are consistent with the catalogue."
+        ]
+      },
+      {
+        "title": "Restore presentation and close out",
+        "actions": [
+          "Correct language/database faults per maker guidance, or arrange service reload.",
+          "Add the ID and plain-language meaning to the bridge quick-reference.",
+          "Retest by inducing a safe, maker-approved test alert if available."
+        ],
+        "checks": [
+          "Future activations show usable text on CAM and source equipment."
+        ]
+      }
+    ],
+    "bam-repeat": [
+      {
+        "title": "Separate nuisance from standing fault",
+        "actions": [
+          "Count activations per watch and note whether acknowledge clears presentation only.",
+          "Check whether the underlying condition remains true on the source equipment.",
+          "Review cluster behaviour—related standard alerts may explain the unlisted one."
+        ],
+        "checks": [
+          "Standing fault vs intermittent interface noise is identified."
+        ]
+      },
+      {
+        "title": "Trace interface and power",
+        "actions": [
+          "Inspect serial/Ethernet/NMEA links used by the source equipment.",
+          "Check 24 V / UPS feeds, earthing, and recent cable work near the unit.",
+          "Swap to redundant link or backup sensor if the architecture allows."
+        ],
+        "checks": [
+          "Communication errors, CRC faults, or power dips correlate with the alert."
+        ]
+      },
+      {
+        "title": "Correct cause; never ‘normalise’ by silence",
+        "actions": [
+          "Repair the interface/sensor/power fault.",
+          "If maker guidance allows a temporary inhibit, record it with owner, reason, and restoration time.",
+          "Update the unlisted-ID quick-reference with the proven cause pattern."
+        ],
+        "checks": [
+          "Alert stays clear through a full watch after repair.",
+          "Any inhibit has a restoration plan."
+        ]
+      }
+    ],
+    "bam-transfer": [
+      {
+        "title": "Confirm BAM role and category",
+        "actions": [
+          "Verify which station owns the alert (source, CAM, BNWAS-related roles as fitted).",
+          "Confirm alert category/priority still allow transfer under current operating mode.",
+          "Check time sync between CAM and source equipment."
+        ],
+        "checks": [
+          "Category and operating mode explain transfer limits, or they do not."
+        ]
+      },
+      {
+        "title": "Recover communications",
+        "actions": [
+          "Inspect BAM network / IEC 61162 links between source and CAM.",
+          "Review recent configuration of alert reporting (ON/OFF per alert).",
+          "Restart only after logging state, following maker recovery order."
+        ],
+        "checks": [
+          "ALF / reporting path is healthy.",
+          "Other alerts from the same source still transfer correctly."
+        ]
+      },
+      {
+        "title": "Close the orphaned alert safely",
+        "actions": [
+          "Resolve or acknowledge at the source per maker procedure.",
+          "Confirm CAM presentation matches source state after recovery.",
+          "Log the failure mode for service—unlisted alerts with broken transfer are a documentation and safety risk."
+        ],
+        "checks": [
+          "No orphaned active state remains on CAM."
+        ]
+      }
+    ],
+    "ams-not-on-list": [
+      {
+        "title": "Freeze the identity of the point",
+        "actions": [
+          "Record AMS tag/point number, display text, group, priority, time, and value/status at activation.",
+          "Export or print the alarm history line.",
+          "Note whether the point is analog, digital, calculated, or serial-imported."
+        ],
+        "checks": [
+          "You can uniquely identify the point even if the ship alarm list omits it."
+        ]
+      },
+      {
+        "title": "Search every on-board definition source",
+        "actions": [
+          "Check approved alarm list, set-point schedule, I/O list, cable schedule, and maker IOM.",
+          "Search AMS engineering/configuration pages for the tag (may be enabled but never exported to the paper list).",
+          "Ask whether yard or service enabled a spare channel recently."
+        ],
+        "checks": [
+          "Configuration database contains the point even if the printed list does not.",
+          "Or the point is truly undefined—treat as configuration fault."
+        ]
+      },
+      {
+        "title": "Prove process vs signal fault",
+        "actions": [
+          "Read the live value at the AMS and compare with a local gauge / tester at the sensor.",
+          "Check loop power, cable continuity, shielding, and earth faults on the 24 V panel.",
+          "If digital, verify the field contact state independently of the AMS card."
+        ],
+        "checks": [
+          "Field condition matches AMS, or the signal chain is false."
+        ]
+      },
+      {
+        "title": "Restore documentation and protection",
+        "actions": [
+          "Correct the root cause (process or signal).",
+          "Update the approved alarm list / set-point schedule and configuration backup.",
+          "Function-test sensor → AMS → extension → bridge/cabin as applicable. Record measured trip value."
+        ],
+        "checks": [
+          "Point is documented, tested, and not left inhibited without a register entry."
+        ]
+      }
+    ],
+    "ams-orphan-tag": [
+      {
+        "title": "Identify retrofit lineage",
+        "actions": [
+          "Compare current I/O map with the last yard/service red-line drawings.",
+          "List recent PLC/AMS downloads, HMI theme updates, and spare-channel enables.",
+          "Interview the last technician who modified the cabinet or software."
+        ],
+        "checks": [
+          "Change window that introduced the tag is known."
+        ]
+      },
+      {
+        "title": "Decide: legitimate new point or leftover",
+        "actions": [
+          "If the field device is real and required, commission it fully (set point, text, priority, extensions, alarm list).",
+          "If leftover/test point, disable or remove per maker procedure and back up the clean configuration.",
+          "Never leave an undocumented active point in UMS."
+        ],
+        "checks": [
+          "Every enabled point has text, set points, and list coverage—or is deliberately removed."
+        ]
+      },
+      {
+        "title": "Regression test the affected group",
+        "actions": [
+          "Lamp/audible test the panel.",
+          "Re-test neighbouring points on the same card or network node.",
+          "File configuration backup location and checksum/version in the technical file."
+        ],
+        "checks": [
+          "No collateral points were disabled or renumbered incorrectly."
+        ]
+      }
+    ],
+    "ams-false-cluster": [
+      {
+        "title": "Classify local vs general engine-room fault",
+        "actions": [
+          "Map alarms to cabinets, loops, and 24 V branches.",
+          "Check earth-fault indication and supply voltage/ripple on the AMS distribution.",
+          "Note whether one maker’s serial package is flooding the AMS with bad imports."
+        ],
+        "checks": [
+          "Pattern points to power/earth, one I/O rack, or one serial source."
+        ]
+      },
+      {
+        "title": "Isolate safely while keeping watch",
+        "actions": [
+          "Increase manning / cancel UMS if machinery protection is compromised.",
+          "For positive earth suspects, isolate branch fuses in turn only when safe and logged.",
+          "For negative earth suspects, lift instrument earths methodically with labels—only under active watchkeeping."
+        ],
+        "checks": [
+          "Critical parameters have an alternate monitoring plan while isolating."
+        ]
+      },
+      {
+        "title": "Repair, then re-prove the group",
+        "actions": [
+          "Repair cable/insulation, PSU/batteries, or serial gateway as found.",
+          "Clear standing alarms only after field verification.",
+          "Update drawings if spare channels or temporary links were involved."
+        ],
+        "checks": [
+          "Cluster does not return across a heat/load cycle.",
+          "UMS is resumed only after extension and dead-man tests pass."
+        ]
+      }
+    ],
+    "ams-extension-only": [
+      {
+        "title": "Correlate extension with panel state",
+        "actions": [
+          "At the moment of the extension call, read the AMS first-up / history.",
+          "Check duty selection, cabin volume, and isolation switches.",
+          "Confirm whether a generic ‘engineers call’ masks a specific unlisted point."
+        ],
+        "checks": [
+          "The extension event is tied to a concrete AMS point ID."
+        ]
+      },
+      {
+        "title": "Repair presentation path",
+        "actions": [
+          "Fix blank/truncated text in the HMI database for that point.",
+          "Verify group acknowledgement logic is not hiding the first-up identity.",
+          "Test extension to duty cabin, public spaces, and bridge."
+        ],
+        "checks": [
+          "Panel text and extension behaviour identify the same point."
+        ]
+      },
+      {
+        "title": "Document for the next UMS period",
+        "actions": [
+          "Add the point to the alarm list if missing.",
+          "Brief the next duty engineer on the new text/ID.",
+          "Record the extension test in the UMS checklist file."
+        ],
+        "checks": [
+          "UMS checklist shows a successful extension test after the fix."
+        ]
+      }
+    ]
+  },
+  "safetyRules": [
+    "An unlisted alarm is still an alarm—silence is not a repair.",
+    "Do not permanently inhibit or widen a set point without a written cause, owner, and restoration time.",
+    "If machinery protection or bridge situational awareness is in doubt, increase manning and cancel UMS / use backup navigation methods.",
+    "Capture identifier, source, time, and operating context before resetting equipment.",
+    "Update the alarm list, BAM quick-reference, and configuration backup whenever a point is confirmed."
+  ]
+}
