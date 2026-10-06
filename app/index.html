@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Shipboard troubleshooting guide for unlisted BAM and AMS alarms." />
+  <title>Unlisted Alarm Desk · Marine Engineering</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="atmosphere" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <a class="brand" href="#top" data-nav="home">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span class="brand-text">
+        <strong>Marine Engineering</strong>
+        <span>Unlisted Alarm Desk</span>
+      </span>
+    </a>
+    <nav class="topnav" aria-label="Primary">
+      <button type="button" data-nav="troubleshoot">Troubleshoot</button>
+      <button type="button" data-nav="reference">ID ranges</button>
+      <button type="button" data-nav="checklist">Checklist</button>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero" id="view-home">
+      <div class="hero-copy">
+        <p class="brand-signal">Marine Engineering</p>
+        <h1>Unlisted Alarm Desk</h1>
+        <p class="lede">
+          Identify manufacturer-defined BAM alerts and undocumented AMS points, then work a safe, repeatable fault path without silencing protection.
+        </p>
+        <div class="cta-row">
+          <button type="button" class="btn primary" data-nav="troubleshoot">Start troubleshooting</button>
+          <button type="button" class="btn ghost" data-nav="reference">View identifier ranges</button>
+        </div>
+      </div>
+      <div class="hero-visual" role="img" aria-label="Abstract bridge console with alert channels">
+        <div class="console">
+          <div class="console-header">
+            <span>Alert channel</span>
+            <span class="pulse"></span>
+          </div>
+          <div class="console-rows">
+            <div class="row active">
+              <span class="id">10482</span>
+              <span class="label">Unlisted · source INS</span>
+              <span class="pri warn">Warning</span>
+            </div>
+            <div class="row">
+              <span class="id">3007</span>
+              <span class="label">Listed · system function</span>
+              <span class="pri">Caution</span>
+            </div>
+            <div class="row">
+              <span class="id">AMS-??</span>
+              <span class="label">Missing from alarm list</span>
+              <span class="pri crit">Alarm</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel hidden" id="view-troubleshoot" aria-labelledby="ts-title">
+      <div class="panel-head">
+        <p class="eyebrow">Interactive path</p>
+        <h2 id="ts-title">Troubleshoot an unlisted alarm</h2>
+        <p class="support">Choose the system context, then the symptom. Steps stay on one job at a time.</p>
+      </div>
+
+      <ol class="wizard-progress" id="wizard-progress" aria-label="Progress"></ol>
+
+      <div id="wizard-stage" class="wizard-stage"></div>
+
+      <div class="safety-strip" id="safety-strip" hidden>
+        <h3>Standing rules</h3>
+        <ul id="safety-list"></ul>
+      </div>
+    </section>
+
+    <section class="panel hidden" id="view-reference" aria-labelledby="ref-title">
+      <div class="panel-head">
+        <p class="eyebrow">IEC 62923-2</p>
+        <h2 id="ref-title">Alert identifier ranges</h2>
+        <p class="support">Unlisted does not mean optional. It means manufacturer-defined, outside Annex A, and it must still be documented.</p>
+      </div>
+
+      <div class="range-grid" role="table" aria-label="Alert identifier ranges">
+        <div class="range-row head" role="row">
+          <span>Range</span>
+          <span>Role</span>
+          <span>Notes</span>
+        </div>
+        <div class="range-row" role="row">
+          <span>0001–0099</span>
+          <span>Emergency alarms</span>
+          <span>Reserved for emergency use only</span>
+        </div>
+        <div class="range-row" role="row">
+          <span>0100–0299</span>
+          <span>Reserved</span>
+          <span>Future expansion</span>
+        </div>
+        <div class="range-row" role="row">
+          <span>0300–9999</span>
+          <span>Standard / graded alerts</span>
+          <span>Use Annex A IDs when the alert is listed</span>
+        </div>
+        <div class="range-row emphasis" role="row">
+          <span>10000–9999999</span>
+          <span>Unlisted / manufacturer-defined</span>
+          <span>Maker must publish the full ID catalogue for the equipment</span>
+        </div>
+      </div>
+
+      <div class="ref-blocks">
+        <article>
+          <h3>What to demand from the maker</h3>
+          <ul>
+            <li>Complete list of all alerts in the equipment with assigned identifiers</li>
+            <li>Plain-language meaning, priority/category, and recommended bridge response</li>
+            <li>Confirmation that Annex A alerts use standard IDs, and all others sit in 10000–9999999</li>
+          </ul>
+        </article>
+        <article>
+          <h3>Shipboard quick checks</h3>
+          <ul>
+            <li>If the ID is ≥ 10000, open that equipment’s BAM catalogue before guessing</li>
+            <li>If AMS text has no alarm-list row, treat configuration/documentation as part of the defect</li>
+            <li>Keep a local quick-reference of proven unlisted IDs for the next watch</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel hidden" id="view-checklist" aria-labelledby="cl-title">
+      <div class="panel-head">
+        <p class="eyebrow">Field sheet</p>
+        <h2 id="cl-title">Investigation checklist</h2>
+        <p class="support">Fill this while the alarm is still active. Print or copy into the defect book.</p>
+      </div>
+
+      <form class="checklist" id="checklist-form">
+        <fieldset>
+          <legend>Identity</legend>
+          <label>System
+            <select name="system">
+              <option value="">Select…</option>
+              <option>BAM / navigation</option>
+              <option>AMS / UMS machinery</option>
+              <option>Other / unknown</option>
+            </select>
+          </label>
+          <label>Identifier / tag
+            <input name="identifier" type="text" placeholder="e.g. 10482 or ME-LO-P-??" autocomplete="off" />
+          </label>
+          <label>Source equipment
+            <input name="source" type="text" placeholder="Radar, INS, AMS cabinet A…" autocomplete="off" />
+          </label>
+          <label>Priority / category
+            <input name="priority" type="text" placeholder="Alarm / Warning / Caution…" autocomplete="off" />
+          </label>
+          <label>Date &amp; time (UTC or ship)
+            <input name="when" type="text" placeholder="2026-10-02 14:22 LT" autocomplete="off" />
+          </label>
+          <label>Operating context
+            <input name="context" type="text" placeholder="Sea passage, UMS, harbour…" autocomplete="off" />
+          </label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Evidence captured</legend>
+          <label class="check"><input type="checkbox" name="ev_photo" /> Screen / log export saved</label>
+          <label class="check"><input type="checkbox" name="ev_maker" /> Maker catalogue checked</label>
+          <label class="check"><input type="checkbox" name="ev_list" /> Ship alarm list / IOM checked</label>
+          <label class="check"><input type="checkbox" name="ev_field" /> Field value / local gauge compared</label>
+          <label class="check"><input type="checkbox" name="ev_power" /> Power / earth / comms reviewed</label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Findings &amp; actions</legend>
+          <label>Observed condition
+            <textarea name="condition" rows="3" placeholder="What was actually wrong in the plant or equipment?"></textarea>
+          </label>
+          <label>Corrective action
+            <textarea name="action" rows="3" placeholder="Repair, config fix, documentation update…"></textarea>
+          </label>
+          <label>Inhibit / set-point change?
+            <textarea name="inhibit" rows="2" placeholder="None — or owner, reason, restore-by time"></textarea>
+          </label>
+          <label>Follow-up owner
+            <input name="owner" type="text" placeholder="2/E, ETO, maker service…" autocomplete="off" />
+          </label>
+        </fieldset>
+
+        <div class="cta-row">
+          <button type="button" class="btn primary" id="copy-checklist">Copy summary</button>
+          <button type="reset" class="btn ghost">Clear</button>
+          <span class="copy-status" id="copy-status" role="status" aria-live="polite"></span>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Operational reference for marine engineers and ETOs. Align actions with maker manuals, class rules, and company SMS.</p>
+    <p><a href="../docs/unlisted-alarms.md">Full guide</a> · <a href="../docs/templates/alarm-investigation.md">Investigation template</a></p>
+  </footer>
+
+  <script src="app.js" type="module"></script>
+</body>
+</html>
