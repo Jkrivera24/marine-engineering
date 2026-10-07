@@ -1,7 +1,7 @@
 {
-  "name": "Vessel Macro Log",
-  "short_name": "Macro Log",
-  "description": "Offline calorie & protein tracker for 80?72 kg on vessel",
+  "name": "Vessel Fit",
+  "short_name": "Vessel Fit",
+  "description": "Offline calorie tracker + 4-day vessel gym plan for 80 to 72 kg",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

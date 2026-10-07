@@ -1,10 +1,11 @@
-const CACHE = "vessel-macro-log-v1";
+const CACHE = "vessel-fit-v2";
 const ASSETS = [
   "./",
   "./index.html",
   "./styles.css",
   "./app.js",
   "./foods.js",
+  "./workouts.js",
   "./manifest.json",
   "./icon.svg",
 ];
