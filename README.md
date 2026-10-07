@@ -28,3 +28,11 @@ python3 -m http.server 8080
 ```
 
 Then open `http://localhost:8080/app/`.
+
+## Vessel Macro Log (calorie tracker)
+
+Offline calorie / protein / weight tracker for the 80 → 72 kg plan, with ship-mess quick-adds.
+
+Open: [`app/calorie-tracker/`](./app/calorie-tracker/) → `http://localhost:8080/app/calorie-tracker/`
+
+On phone: open in browser → **Add to Home Screen** for app-like use. Data stays on device.

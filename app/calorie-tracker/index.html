@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0a3a4a" />
+  <meta name="description" content="Vessel calorie tracker — 80 kg to 72 kg" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>Vessel Macro Log</title>
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" href="./icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="./icon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="atmosphere" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <div class="brand-block">
+      <p class="brand">Vessel Macro Log</p>
+      <p class="tagline">80 ? 72 kg · ship mess ready</p>
+    </div>
+    <div class="topbar-actions">
+      <button type="button" class="ghost-btn" id="prev-day" aria-label="Previous day">‹</button>
+      <button type="button" class="date-btn" id="date-label" title="Jump to today"></button>
+      <button type="button" class="ghost-btn" id="next-day" aria-label="Next day">›</button>
+      <button type="button" class="icon-btn" id="open-settings" aria-label="Settings">?</button>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="hero-metrics" aria-label="Daily targets">
+      <div class="metric-ring-wrap">
+        <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
+          <circle class="ring-bg" cx="60" cy="60" r="52" />
+          <circle class="ring-fg" id="cal-ring" cx="60" cy="60" r="52" />
+        </svg>
+        <div class="ring-center">
+          <strong id="cal-remaining">2000</strong>
+          <span>kcal left</span>
+        </div>
+      </div>
+      <div class="metric-stack">
+        <div class="stat-line">
+          <div class="stat-head">
+            <span>Calories</span>
+            <span id="cal-summary">0 / 2000</span>
+          </div>
+          <div class="bar" aria-hidden="true"><i id="cal-bar"></i></div>
+        </div>
+        <div class="stat-line">
+          <div class="stat-head">
+            <span>Protein</span>
+            <span id="pro-summary">0 / 140 g</span>
+          </div>
+          <div class="bar protein" aria-hidden="true"><i id="pro-bar"></i></div>
+        </div>
+        <div class="macro-row" id="macro-row">
+          <span>C <b id="carb-val">0</b>g</span>
+          <span>F <b id="fat-val">0</b>g</span>
+          <span>Water <b id="water-val">0</b>/8</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="quick-row" aria-label="Quick actions">
+      <button type="button" class="primary-btn" id="add-food-btn">+ Add food</button>
+      <button type="button" class="secondary-btn" id="add-water-btn">+ Water</button>
+      <button type="button" class="secondary-btn" id="log-weight-btn">Weight</button>
+    </section>
+
+    <section class="ship-foods" aria-label="Ship mess quick add">
+      <div class="section-head">
+        <h2>Ship mess — tap to add</h2>
+        <button type="button" class="text-btn" id="toggle-ship-foods">Show all</button>
+      </div>
+      <div class="chip-grid" id="ship-food-chips"></div>
+    </section>
+
+    <section class="diary" aria-label="Food diary">
+      <div class="section-head">
+        <h2>Today’s log</h2>
+        <span class="muted" id="entry-count">0 items</span>
+      </div>
+      <div id="meal-sections"></div>
+      <p class="empty-hint" id="empty-hint">No food logged yet. Tap a ship food or Add food.</p>
+    </section>
+
+    <section class="weight-panel" aria-label="Weight progress">
+      <div class="section-head">
+        <h2>Weight</h2>
+        <span class="muted" id="weight-latest">—</span>
+      </div>
+      <div class="weight-track">
+        <div class="weight-labels">
+          <span>80 kg</span>
+          <span>72 kg</span>
+        </div>
+        <div class="bar goal" aria-hidden="true"><i id="weight-bar"></i></div>
+        <p class="weight-note" id="weight-note">Log your first weigh-in to track progress.</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Add food sheet -->
+  <div class="sheet-backdrop" id="food-backdrop" hidden></div>
+  <aside class="sheet" id="food-sheet" role="dialog" aria-modal="true" aria-labelledby="food-sheet-title" hidden>
+    <div class="sheet-handle"></div>
+    <header class="sheet-head">
+      <h2 id="food-sheet-title">Add food</h2>
+      <button type="button" class="icon-btn" id="close-food" aria-label="Close">?</button>
+    </header>
+    <div class="sheet-body">
+      <label class="field">
+        <span>Search foods</span>
+        <input type="search" id="food-search" placeholder="chicken, rice, egg…" autocomplete="off" />
+      </label>
+      <label class="field">
+        <span>Meal</span>
+        <select id="meal-select">
+          <option value="breakfast">Breakfast</option>
+          <option value="lunch">Lunch</option>
+          <option value="dinner">Dinner</option>
+          <option value="snack">Snack</option>
+        </select>
+      </label>
+      <div class="search-results" id="search-results"></div>
+      <details class="custom-food">
+        <summary>Custom food / mess plate</summary>
+        <div class="custom-grid">
+          <label class="field"><span>Name</span><input id="custom-name" placeholder="Mess chicken rice" /></label>
+          <label class="field"><span>Calories</span><input id="custom-kcal" type="number" min="0" step="1" placeholder="450" /></label>
+          <label class="field"><span>Protein (g)</span><input id="custom-pro" type="number" min="0" step="0.1" placeholder="35" /></label>
+          <label class="field"><span>Carbs (g)</span><input id="custom-carb" type="number" min="0" step="0.1" placeholder="40" /></label>
+          <label class="field"><span>Fat (g)</span><input id="custom-fat" type="number" min="0" step="0.1" placeholder="12" /></label>
+          <button type="button" class="primary-btn" id="save-custom">Save &amp; add</button>
+        </div>
+      </details>
+    </div>
+  </aside>
+
+  <!-- Weight sheet -->
+  <div class="sheet-backdrop" id="weight-backdrop" hidden></div>
+  <aside class="sheet" id="weight-sheet" role="dialog" aria-modal="true" aria-labelledby="weight-sheet-title" hidden>
+    <div class="sheet-handle"></div>
+    <header class="sheet-head">
+      <h2 id="weight-sheet-title">Log weight</h2>
+      <button type="button" class="icon-btn" id="close-weight" aria-label="Close">?</button>
+    </header>
+    <div class="sheet-body">
+      <label class="field">
+        <span>Weight (kg)</span>
+        <input id="weight-input" type="number" min="40" max="200" step="0.1" placeholder="80.0" />
+      </label>
+      <label class="field">
+        <span>Date</span>
+        <input id="weight-date" type="date" />
+      </label>
+      <button type="button" class="primary-btn" id="save-weight">Save weigh-in</button>
+      <ul class="weight-history" id="weight-history"></ul>
+    </div>
+  </aside>
+
+  <!-- Settings sheet -->
+  <div class="sheet-backdrop" id="settings-backdrop" hidden></div>
+  <aside class="sheet" id="settings-sheet" role="dialog" aria-modal="true" aria-labelledby="settings-sheet-title" hidden>
+    <div class="sheet-handle"></div>
+    <header class="sheet-head">
+      <h2 id="settings-sheet-title">Targets &amp; profile</h2>
+      <button type="button" class="icon-btn" id="close-settings" aria-label="Close">?</button>
+    </header>
+    <div class="sheet-body">
+      <label class="field"><span>Daily calories</span><input id="goal-kcal" type="number" min="1200" max="4000" step="50" /></label>
+      <label class="field"><span>Protein (g)</span><input id="goal-pro" type="number" min="50" max="300" step="5" /></label>
+      <label class="field"><span>Start weight (kg)</span><input id="goal-start" type="number" min="40" max="200" step="0.1" /></label>
+      <label class="field"><span>Goal weight (kg)</span><input id="goal-end" type="number" min="40" max="200" step="0.1" /></label>
+      <button type="button" class="primary-btn" id="save-settings">Save targets</button>
+      <button type="button" class="danger-btn" id="export-data">Export backup (JSON)</button>
+      <button type="button" class="ghost-wide" id="import-data">Import backup</button>
+      <input type="file" id="import-file" accept="application/json" hidden />
+      <p class="fine-print">Data stays on this device (offline). Add to Home Screen for app-like use.</p>
+    </div>
+  </aside>
+
+  <div class="toast" id="toast" hidden></div>
+
+  <script src="./foods.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>

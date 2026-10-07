@@ -1,0 +1,19 @@
+{
+  "name": "Vessel Macro Log",
+  "short_name": "Macro Log",
+  "description": "Offline calorie & protein tracker for 80?72 kg on vessel",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#d9e7ee",
+  "theme_color": "#0a3a4a",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
