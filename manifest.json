@@ -1,0 +1,19 @@
+{
+  "name": "Vessel Fit",
+  "short_name": "Vessel Fit",
+  "description": "Offline calorie tracker + 4-day vessel gym plan for 80 to 72 kg",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#d9e7ee",
+  "theme_color": "#0a3a4a",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
