@@ -28,3 +28,17 @@ python3 -m http.server 8080
 ```
 
 Then open `http://localhost:8080/app/`.
+
+## Vessel Fit (calorie tracker + workout plan)
+
+Offline app combining:
+
+- Food / protein / water / weight tracking (ship-mess quick-adds)
+- Your **4-day vessel gym spreadsheet** (sets, cues, YouTube form videos, session logging)
+
+Open: [`app/calorie-tracker/`](./app/calorie-tracker/) → `http://localhost:8080/app/calorie-tracker/`
+
+Tabs: **Food** · **Train** · **Progress**
+
+On phone: open in browser → **Add to Home Screen**. Data stays on device.
+The Excel source remains at [`docs/fitness/`](./docs/fitness/) if you still want Google Sheets.
